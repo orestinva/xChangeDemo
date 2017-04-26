@@ -64,62 +64,35 @@ public class MarketPollingDemoExchanges implements Runnable{
         System.out.println("plotting...");
 
 
-        // BIDS
-        ArrayList<Number> xData = new ArrayList<Number>();
-        ArrayList<Number> yData = new ArrayList<Number>();
-        BigDecimal accumulatedBidUnits = new BigDecimal("0");
-        for (LimitOrder limitOrder : orderBookBitStamp.getBids()) {
-            if (limitOrder.getLimitPrice().intValue() > 10) {
-                xData.add(limitOrder.getLimitPrice());
-                accumulatedBidUnits = accumulatedBidUnits.add(limitOrder.getTradableAmount());
-                yData.add(accumulatedBidUnits);
-            }
-        }
-        Collections.reverse(xData);
-        Collections.reverse(yData);
+        // get BIDS
+        ArrayList<BigDecimal> xBidData = new ArrayList<BigDecimal>();
+        ArrayList<BigDecimal> yBidData = new ArrayList<BigDecimal>();
+        getBids(orderBookBitStamp, xBidData, yBidData, 10);
 
-        // Create Chart
-        XYChart chart = QuickChart.getChart("BitStamp Order Book", "USD", "BTC", "BitStamp bids", xData, yData);
+        // Create Chart, add bids
+        XYChart chart = QuickChart.getChart("BitStamp Order Book", "USD", "BTC", "BitStamp bids", xBidData, yBidData);
 
-        // ASKS
-        ArrayList<Number> xAskData = new ArrayList<Number>();
-        ArrayList<Number> yAskData = new ArrayList<Number>();
-        BigDecimal accumulatedAskUnits = new BigDecimal("0");
-        for (LimitOrder limitOrder : orderBookBitStamp.getAsks()) {
-            if (limitOrder.getLimitPrice().intValue() < 10000) {
-                xAskData.add(limitOrder.getLimitPrice());
-                accumulatedAskUnits = accumulatedAskUnits.add(limitOrder.getTradableAmount());
-                yAskData.add(accumulatedAskUnits);
-            }
-        }
+        // get ASKS
+        ArrayList<BigDecimal> xAskData = new ArrayList<BigDecimal>();
+        ArrayList<BigDecimal> yAskData = new ArrayList<BigDecimal>();
+        getAsks(orderBookBitStamp, xAskData, yAskData, 10000);
 
-        // Asks Series
+        // add Asks Series to chart
         Series series = chart.addSeries("BitStamp asks", xAskData, yAskData);
 
 
-        List<Number> xDataAnx = new ArrayList<Number>();
-        List<Number> yDataAnx = new ArrayList<Number>();
-        BigDecimal acumulatedAnxUnits = new BigDecimal("0");
-        for (LimitOrder limitOrder : orderBookLiveCoin.getBids()) {
-            if (limitOrder.getLimitPrice().intValue() > 10) {
-                xDataAnx.add(limitOrder.getLimitPrice());
-                acumulatedAnxUnits = acumulatedAnxUnits.add(limitOrder.getTradableAmount());
-                yDataAnx.add(acumulatedAnxUnits);
-            }
-        }
+        ArrayList<BigDecimal> xDataAnx = new ArrayList<BigDecimal>();
+        ArrayList<BigDecimal> yDataAnx = new ArrayList<BigDecimal>();
+        getBids(orderBookLiveCoin, xDataAnx, yDataAnx, 10);
+
         XYChart chart2 = QuickChart.getChart("LiveCoin Order Book", "USD", "BTC", "LiveCoin bids", xDataAnx, yDataAnx);
 
         //other asks Asks
-        xDataAnx = new ArrayList<Number>();
-        yDataAnx = new ArrayList<Number>();
-        BigDecimal acumulatedAnxAskUnits = new BigDecimal("0");
-        for (LimitOrder limitOrder : orderBookLiveCoin.getAsks()) {
-            if (limitOrder.getLimitPrice().intValue() < 10000) {
-                xDataAnx.add(limitOrder.getLimitPrice());
-                acumulatedAnxAskUnits = acumulatedAnxAskUnits.add(limitOrder.getTradableAmount());
-                yDataAnx.add(acumulatedAnxAskUnits);
-            }
-        }
+        xDataAnx = new ArrayList<BigDecimal>();
+        yDataAnx = new ArrayList<BigDecimal>();
+        
+        getAsks(orderBookLiveCoin, xDataAnx, yDataAnx, 10000);
+
         series = chart2.addSeries("LiveCoin asks", xDataAnx, yDataAnx);
 
         //adding charts to list for wrapper
@@ -136,5 +109,29 @@ public class MarketPollingDemoExchanges implements Runnable{
         gui.getCenterpanel().add(chartPanel2).setVisible(true);
         gui.getCenterpanel().updateUI();
 
+    }
+
+    public void getBids(OrderBook orderBook, ArrayList<BigDecimal> xData, ArrayList<BigDecimal> yData, int threshold){
+        BigDecimal accumulatedUnits = new BigDecimal("0");
+        for (LimitOrder limitOrder : orderBook.getBids()) {
+            if (limitOrder.getLimitPrice().intValue() > threshold) {
+                xData.add(limitOrder.getLimitPrice());
+                accumulatedUnits = accumulatedUnits.add(limitOrder.getTradableAmount());
+                yData.add(accumulatedUnits);
+            }
+        }
+        Collections.reverse(xData);
+        Collections.reverse(yData);
+    }
+
+    public void getAsks(OrderBook orderBook, ArrayList<BigDecimal> xData, ArrayList<BigDecimal> yData, int threshold){
+        BigDecimal accumulatedUnits = new BigDecimal("0");
+        for (LimitOrder limitOrder : orderBook.getAsks()) {
+            if (limitOrder.getLimitPrice().intValue() < threshold) {
+                xData.add(limitOrder.getLimitPrice());
+                accumulatedUnits = accumulatedUnits.add(limitOrder.getTradableAmount());
+                yData.add(accumulatedUnits);
+            }
+        }
     }
 }
