@@ -81,19 +81,19 @@ public class MarketPollingDemoExchanges implements Runnable{
         Series series = chart.addSeries("BitStamp asks", xAskData, yAskData);
 
 
-        ArrayList<BigDecimal> xDataAnx = new ArrayList<BigDecimal>();
-        ArrayList<BigDecimal> yDataAnx = new ArrayList<BigDecimal>();
-        getBids(orderBookLiveCoin, xDataAnx, yDataAnx, 10);
+        ArrayList<BigDecimal> xBidDataTwo = new ArrayList<BigDecimal>();
+        ArrayList<BigDecimal> yBidDataTwo = new ArrayList<BigDecimal>();
+        getBids(orderBookLiveCoin, xBidDataTwo, yBidDataTwo, 10);
 
-        XYChart chart2 = QuickChart.getChart("LiveCoin Order Book", "USD", "BTC", "LiveCoin bids", xDataAnx, yDataAnx);
+        XYChart chart2 = QuickChart.getChart("LiveCoin Order Book", "USD", "BTC", "LiveCoin bids", xBidDataTwo, yBidDataTwo);
 
         //other asks Asks
-        xDataAnx = new ArrayList<BigDecimal>();
-        yDataAnx = new ArrayList<BigDecimal>();
-        
-        getAsks(orderBookLiveCoin, xDataAnx, yDataAnx, 10000);
+        ArrayList<BigDecimal> xAskdataTwo = new ArrayList<BigDecimal>();
+        ArrayList<BigDecimal> yAskDataTwo = new ArrayList<BigDecimal>();
 
-        series = chart2.addSeries("LiveCoin asks", xDataAnx, yDataAnx);
+        getAsks(orderBookLiveCoin, xAskdataTwo, yAskDataTwo, 10000);
+
+        series = chart2.addSeries("LiveCoin asks", xAskdataTwo, yAskDataTwo);
 
         //adding charts to list for wrapper
         List<XYChart> charts = new ArrayList<XYChart>();
