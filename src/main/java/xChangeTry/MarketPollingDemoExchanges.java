@@ -27,17 +27,38 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by inva on 12/4/2016.
+ * MarketPollingDemoExchanges is class that performs all calculating and sends data to GUI.
+ * Main purpose is to make operations with data to prepare graphical output to user.
+ * Comparing pairs BTC-USD and BTC-EUR that will allows user to chose best scenario.
+ *
+ * @author  Orest Reveha
+ *
  */
 public class MarketPollingDemoExchanges implements Runnable{
 
     MarketPollingGUI gui;
 
+    /**
+     *Creating new MarketPollingDemoExchanges class.
+     *
+     * @param gui to decide what GUI will be used
+     */
     public MarketPollingDemoExchanges(MarketPollingGUI gui){
         this.gui = gui;
 
     }
 
+    /**
+     * Runs main calculating process that consists from several stages.
+     * <ul>
+     *     <li>Getting exchange APIs for both Bitstamp and Bitkonan</li>
+     *     <li>Getting marked data</li>
+     *     <li>Creating orders from checked options in GUI</li>
+     *     <li>Getting Bids and Asks</li>
+     *     <li>Creating chart</li>
+     *     <li>Sending output to GUI</li>
+     * </ul>
+     */
     public void run() {
         // Use the factory to get the version 1 Bitstamp and Bitkonan exchange API using default settings
         Exchange bitstamp = ExchangeFactory.INSTANCE.createExchange(BitstampExchange.class.getName());
@@ -111,6 +132,14 @@ public class MarketPollingDemoExchanges implements Runnable{
 
     }
 
+    /**
+     * Creating bids according to input data.
+     *
+     * @param orderBook Orders to use
+     * @param xData x Data
+     * @param yData y Data
+     * @param threshold threshold to compare with
+     */
     public void getBids(OrderBook orderBook, ArrayList<BigDecimal> xData, ArrayList<BigDecimal> yData, int threshold){
         BigDecimal accumulatedUnits = new BigDecimal("0");
         for (LimitOrder limitOrder : orderBook.getBids()) {
@@ -124,6 +153,14 @@ public class MarketPollingDemoExchanges implements Runnable{
         Collections.reverse(yData);
     }
 
+    /**
+     *Creating asks according to input data.
+     *
+     * @param orderBook Orders to use
+     * @param xData x Data
+     * @param yData y Data
+     * @param threshold threshold to compare with
+     */
     public void getAsks(OrderBook orderBook, ArrayList<BigDecimal> xData, ArrayList<BigDecimal> yData, int threshold){
         BigDecimal accumulatedUnits = new BigDecimal("0");
         for (LimitOrder limitOrder : orderBook.getAsks()) {

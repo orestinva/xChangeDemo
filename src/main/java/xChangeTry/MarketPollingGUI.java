@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 
 
 /**
- * Created by inva on 12/4/2016.
+ * MarketPollingGUI class is base class to provide graphical user interface.
+ * Simple window that allows to set up properties, and calculate results with graphic presentation next.
+ *
+ * @author Orest Reveha
  */
 public class MarketPollingGUI extends JFrame {
 
@@ -24,6 +27,9 @@ public class MarketPollingGUI extends JFrame {
     private JButton goButton = new JButton("Go");
     private JOptionPane optionPane = new JOptionPane();
 
+    /**
+     * Creating graphical user interface.
+     */
     public MarketPollingGUI(){
         super("xChange Demo");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -65,6 +71,12 @@ public class MarketPollingGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Creating a crypto-currency pair.
+     *
+     * @return pair of two selected options - crypto and currency; <code>null</code> in case some option haven't been chosen
+     *
+     */
     public CurrencyPair getCurrencyPair(){
 
         String currencyOne = currencyOneComboBox.getSelectedItem().toString();
@@ -77,10 +89,18 @@ public class MarketPollingGUI extends JFrame {
         return null;
     }
 
+    /**
+     * Provide access for option pane for members out of this class
+     * @return optionPane
+     */
     public JOptionPane getOptionPane() {
         return optionPane;
     }
 
+    /**
+     * Provide access for center panel for members out of this class
+     * @return centerpanel
+     */
     public JPanel getCenterpanel() {
         return centerpanel;
     }
